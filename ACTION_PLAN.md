@@ -17,7 +17,7 @@ La IA debe actuar como mentor, explicando y enseñando los conceptos, revisando 
 
 ---
 
-### ⏳ 2. Modelo de datos y CRUD básico
+### ✅ 2. Modelo de datos y CRUD básico
 
 *Tecnologías: FastAPI, Pydantic.*
 **Objetivos:**
@@ -25,8 +25,8 @@ La IA debe actuar como mentor, explicando y enseñando los conceptos, revisando 
 - Implementar endpoints REST:
     - ✅ `POST /tasks` (crear tarea).
     - ✅ `GET /tasks` (listar todas las tareas).
-    - ➡️ `PUT /tasks/{id}` (actualizar una tarea).
-    - `DELETE /tasks/{id}` (eliminar tarea).
+    - ✅ `PUT /tasks/{id}` (actualizar una tarea).
+    - ✅ `DELETE /tasks/{id}` (eliminar tarea).
 
 *Mentor: ✅ debe enseñar la diferencia entre modelos de entrada (request) y salida (response) en Pydantic, y explicar cómo FastAPI valida automáticamente los datos.*
 
