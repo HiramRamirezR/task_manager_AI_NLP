@@ -43,10 +43,12 @@ La IA debe actuar como mentor, explicando y enseñando los conceptos, revisando 
 
 ---
 
-### 4. Endpoint de NLP para crear tareas desde lenguaje natural
+### ⏳ 4. Endpoint de NLP para crear tareas desde lenguaje natural
 
-*Tecnologías: spaCy (o regex + heurísticas si queremos algo más simple).*
+*Tecnologías: spaCy (o regex + heurísticas si queremos algo más simple), dateparser.*
 **Objetivos:**
-- Crear un endpoint `POST /tasks/nlp` que reciba frases como:
-    - “Recuérdame enviar el reporte el lunes a las 9 am con prioridad alta”.
+- ✅ Crear un endpoint `POST /tasks/nlp`.
+- ✅ Instalar y usar `dateparser` para extraer la fecha.
+- ⏳ **Problema actual:** `dateparser` extrae bien la fecha (día/mes/año) pero no la hora (ej: "9 am" lo interpreta como medianoche).
+- 🎯 **Siguiente paso:** Dejar que `dateparser` extraiga la fecha base y, por separado, usar una expresión regular (regex) para encontrar la hora en el texto original y combinar ambos resultados.
 - Parsear la frase y devolver una tarea estructurada.

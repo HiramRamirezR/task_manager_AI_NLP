@@ -1,6 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from datetime import date
 from pydantic import BaseModel
+import re
+from dateparser.search import search_dates
 
 app = FastAPI()
 tasks_db = []
@@ -15,6 +17,9 @@ class Task(BaseModel):
     due_date: date
     priority: str
     status: str
+
+class NlpRequest(BaseModel):
+    text: str
 
 @app.get("/tasks", response_model=list[Task])
 def get_all_tasks():
@@ -41,3 +46,26 @@ def delete_task(task_id: int):
             del tasks_db[i]
             return {"status": "success", "message": "Task deleted successfully"}
     raise HTTPException(status_code=404, detail="Task not found")
+
+@app.post("/tasks/nlp")
+def create_task_from_nlp(request: NlpRequest):
+    text = request.text
+
+    settings = {'PREFER_DATES_FROM': 'future'}
+
+    found_dates = search_dates(
+        text,
+        languages=["es", "en"],
+        settings=settings)
+
+    date_text_found = None
+    due_date = None
+
+    if found_dates:
+        date_text_found = found_dates[0][0]
+        due_date = found_dates[0][1]
+    return {
+        "original_text": text,
+        "date_text_found": date_text_found,
+        "parsed_date": due_date
+    }
