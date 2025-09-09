@@ -50,5 +50,5 @@ La IA debe actuar como mentor, explicando y enseñando los conceptos, revisando 
 - ✅ Crear un endpoint `POST /tasks/nlp`.
 - ✅ Instalar y usar `dateparser` para extraer la fecha.
 - ⏳ **Problema actual:** `dateparser` extrae bien la fecha (día/mes/año) pero no la hora (ej: "9 am" lo interpreta como medianoche).
-- 🎯 **Siguiente paso:** Dejar que `dateparser` extraiga la fecha base y, por separado, usar una expresión regular (regex) para encontrar la hora en el texto original y combinar ambos resultados.
+- ⏳ **Progreso:** Hemos implementado una expresión regular (regex) para extraer la hora y la estamos combinando con la fecha de `dateparser`. Estamos en proceso de depuración y refinamiento de la lógica de extracción de la hora y manejo de casos límite (AM/PM, errores).
 - Parsear la frase y devolver una tarea estructurada.

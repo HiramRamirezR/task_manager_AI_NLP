@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from datetime import date
+from datetime import date, datetime
 from pydantic import BaseModel
 import re
 from dateparser.search import search_dates
@@ -58,14 +58,68 @@ def create_task_from_nlp(request: NlpRequest):
         languages=["es", "en"],
         settings=settings)
 
+    time_pattern = r'\b(?:a las|a la|a eso de las)?\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\b'
+    time_match = re.search(time_pattern, text, re.IGNORECASE)
+
     date_text_found = None
     due_date = None
 
     if found_dates:
         date_text_found = found_dates[0][0]
         due_date = found_dates[0][1]
+
+        if time_match:
+            hour = int(time_match.group(1))
+            minute = int(time_match.group(2)) if time_match.group(2) else 0
+            am_pm = time_match.group(3)
+
+            if am_pm and am_pm.lower() == "pm" and hour < 12:
+                hour += 12
+            elif am_pm and am_pm.lower() == "am" and hour == 12:
+                hour = 0
+
+            due_date = datetime(
+                due_date.year,
+                due_date.month,
+                due_date.day,
+                hour,
+                minute
+            )
+
     return {
         "original_text": text,
         "date_text_found": date_text_found,
-        "parsed_date": due_date
+        "parsed_date": due_date,
+        "year": due_date.year,
+        "month": due_date.month,
+        "day": due_date.day,
+        "hour": hour,
+        "minute": minute
     }
+
+# resutl
+
+# {
+#   "original_text": "enviar informe manana a las 9",
+#   "date_text_found": "manana a las 9",
+#   "parsed_date": "2025-09-10T09:00:00",
+#   "year": 2025,
+#   "month": 9,
+#   "day": 10,
+#   "hour": 9,
+#   "minute": 0
+# }
+
+"""
+{
+  "original_text": "reunion el 15 de octubre a las 10:30 am",
+  "date_text_found": "15 de octubre a las 10:30 am",
+  "parsed_date": "2025-10-15T15:00:00",
+  "year": 2025,
+  "month": 10,
+  "day": 15,
+  "hour": 15,
+  "minute": 0
+}"""
+
+# Internal Server Error
