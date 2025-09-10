@@ -51,15 +51,17 @@ def delete_task(task_id: int):
 def create_task_from_nlp(request: NlpRequest):
     text = request.text
 
-    settings = {'PREFER_DATES_FROM': 'future'}
+    time_pattern = r'\b(?:a las|a la|a eso de las)?\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\b'
+    time_match = re.search(time_pattern, text, re.IGNORECASE)
 
+    time_is_present_in_text = time_match is not None
+
+    settings = {'PREFER_DATES_FROM': 'future'}
     found_dates = search_dates(
         text,
         languages=["es", "en"],
         settings=settings)
 
-    time_pattern = r'\b(?:a las|a la|a eso de las)?\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\b'
-    time_match = re.search(time_pattern, text, re.IGNORECASE)
 
     date_text_found = None
     due_date = None
@@ -68,58 +70,36 @@ def create_task_from_nlp(request: NlpRequest):
         date_text_found = found_dates[0][0]
         due_date = found_dates[0][1]
 
-        if time_match:
-            hour = int(time_match.group(1))
-            minute = int(time_match.group(2)) if time_match.group(2) else 0
-            am_pm = time_match.group(3)
+        description = text.replace(date_text_found, "").strip()
 
-            if am_pm and am_pm.lower() == "pm" and hour < 12:
-                hour += 12
-            elif am_pm and am_pm.lower() == "am" and hour == 12:
-                hour = 0
+        if not time_is_present_in_text:
+            due_date = due_date.replace(hour=0, minute=0, second=0, microsecond=0)
 
-            due_date = datetime(
-                due_date.year,
-                due_date.month,
-                due_date.day,
-                hour,
-                minute
-            )
+    if not due_date:
+        raise HTTPException(status_code=400, detail="No date found in text")
 
     return {
         "original_text": text,
         "date_text_found": date_text_found,
         "parsed_date": due_date,
+        "description": description,
         "year": due_date.year,
         "month": due_date.month,
         "day": due_date.day,
-        "hour": hour,
-        "minute": minute
+        "hour": due_date.hour,
+        "minute": due_date.minute
     }
 
-# resutl
+# Result
 
-# {
-#   "original_text": "enviar informe manana a las 9",
-#   "date_text_found": "manana a las 9",
-#   "parsed_date": "2025-09-10T09:00:00",
-#   "year": 2025,
-#   "month": 9,
-#   "day": 10,
-#   "hour": 9,
-#   "minute": 0
-# }
-
-"""
-{
-  "original_text": "reunion el 15 de octubre a las 10:30 am",
-  "date_text_found": "15 de octubre a las 10:30 am",
-  "parsed_date": "2025-10-15T15:00:00",
+"""{
+  "original_text": "revisar el informe mañana a las 5pm",
+  "date_text_found": "mañana a las 5pm",
+  "parsed_date": "2025-09-11T17:00:00",
+  "description": "revisar el informe",
   "year": 2025,
-  "month": 10,
-  "day": 15,
-  "hour": 15,
+  "month": 9,
+  "day": 11,
+  "hour": 17,
   "minute": 0
 }"""
-
-# Internal Server Error
