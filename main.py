@@ -14,7 +14,7 @@ def health_check():
 class Task(BaseModel):
     id: int
     description: str
-    due_date: date
+    due_date: datetime
     priority: str
     status: str
 
@@ -47,7 +47,7 @@ def delete_task(task_id: int):
             return {"status": "success", "message": "Task deleted successfully"}
     raise HTTPException(status_code=404, detail="Task not found")
 
-@app.post("/tasks/nlp")
+@app.post("/tasks/nlp", response_model=Task)
 def create_task_from_nlp(request: NlpRequest):
     text = request.text
 
@@ -72,34 +72,34 @@ def create_task_from_nlp(request: NlpRequest):
 
         description = text.replace(date_text_found, "").strip()
 
+        new_id = len(tasks_db) + 1
+        priority = "Urgente"
+        status = "Pendiente"
+
         if not time_is_present_in_text:
             due_date = due_date.replace(hour=0, minute=0, second=0, microsecond=0)
+
+        new_task = Task(
+            id=new_id,
+            description=description,
+            due_date=due_date,
+            priority=priority,
+            status=status
+        )
+
+        tasks_db.append(new_task)
+
+        return new_task
 
     if not due_date:
         raise HTTPException(status_code=400, detail="No date found in text")
 
-    return {
-        "original_text": text,
-        "date_text_found": date_text_found,
-        "parsed_date": due_date,
-        "description": description,
-        "year": due_date.year,
-        "month": due_date.month,
-        "day": due_date.day,
-        "hour": due_date.hour,
-        "minute": due_date.minute
-    }
-
-# Result
+# Response body
 
 """{
-  "original_text": "revisar el informe mañana a las 5pm",
-  "date_text_found": "mañana a las 5pm",
-  "parsed_date": "2025-09-11T17:00:00",
+  "id": 1,
   "description": "revisar el informe",
-  "year": 2025,
-  "month": 9,
-  "day": 11,
-  "hour": 17,
-  "minute": 0
+  "due_date": "2025-09-11T17:00:00",
+  "priority": "Urgente",
+  "status": "Pendiente"
 }"""

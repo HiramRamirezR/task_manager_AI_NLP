@@ -43,12 +43,15 @@ La IA debe actuar como mentor, explicando y enseñando los conceptos, revisando 
 
 ---
 
-### ⏳ 4. Endpoint de NLP para crear tareas desde lenguaje natural
+### ✅ 4. Endpoint de NLP para crear tareas desde lenguaje natural
 
-*Tecnologías: spaCy (o regex + heurísticas si queremos algo más simple), dateparser.*
+*Tecnologías: FastAPI, Pydantic, dateparser, regex.*
 **Objetivos:**
-- ✅ Crear un endpoint `POST /tasks/nlp`.
-- ✅ Instalar y usar `dateparser` para extraer la fecha.
-- ⏳ **Problema actual:** `dateparser` extrae bien la fecha (día/mes/año) pero no la hora (ej: "9 am" lo interpreta como medianoche).
-- ⏳ **Progreso:** Hemos implementado una expresión regular (regex) para extraer la hora y la estamos combinando con la fecha de `dateparser`. Estamos en proceso de depuración y refinamiento de la lógica de extracción de la hora y manejo de casos límite (AM/PM, errores).
-- Parsear la frase y devolver una tarea estructurada.
+- ✅ Crear un endpoint `POST /tasks/nlp` que recibe texto.
+- ✅ Implementar una lógica robusta para extraer fecha y hora, solucionando las limitaciones de `dateparser` con una estrategia híbrida.
+- ✅ Implementar la extracción de la descripción de la tarea del texto original.
+- ✅ Construir un objeto `Task` completo con los datos extraídos y valores por defecto.
+- ✅ Actualizar el modelo `Task` para que `due_date` sea de tipo `datetime` y pueda almacenar la hora.
+- ✅ Añadir la tarea creada a la base de datos en memoria.
+
+*Mentor: ✅ guiar en el proceso de depuración, refactorización, y diseño de la solución. Explicar conceptos de inmutabilidad (`.replace()`), creación de objetos Pydantic, y la importancia de un modelo de datos coherente.*
