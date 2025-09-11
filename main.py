@@ -1,17 +1,22 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from datetime import date, datetime
 from pydantic import BaseModel
 import re
 from dateparser.search import search_dates
 from models import Task
 from database import engine
-from sqlmodel import SQLModel
+from sqlmodel import SQLModel, Session, select
 
 app = FastAPI()
 
 # This function create the table in the DB
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
+
+# Function to obtain a data base session
+def get_session():
+    with Session(engine) as session:
+        yield session
 
 @app.on_event("startup")
 def on_startup():
@@ -27,8 +32,9 @@ class NlpRequest(BaseModel):
     text: str
 
 @app.get("/tasks", response_model=list[Task])
-def get_all_tasks():
-    return tasks_db
+def get_all_tasks(session: Session = Depends(get_session)):
+    tasks = session.exec(select(Task)).all()
+    return tasks
 
 @app.post("/tasks", response_model=Task)
 def create_task(task: Task):
