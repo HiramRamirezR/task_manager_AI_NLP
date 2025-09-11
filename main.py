@@ -78,7 +78,7 @@ def delete_task(task_id: int, session: Session = Depends(get_session)):
 
 
 @app.post("/tasks/nlp", response_model=Task)
-def create_task_from_nlp(request: NlpRequest):
+def create_task_from_nlp(request: NlpRequest, session: Session = Depends(get_session)):
     text = request.text
 
     time_pattern = r'\b(?:a las|a la|a eso de las)?\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\b'
@@ -102,7 +102,6 @@ def create_task_from_nlp(request: NlpRequest):
 
         description = text.replace(date_text_found, "").strip()
 
-        new_id = len(tasks_db) + 1
         priority = "Urgente"
         status = "Pendiente"
 
@@ -110,14 +109,15 @@ def create_task_from_nlp(request: NlpRequest):
             due_date = due_date.replace(hour=0, minute=0, second=0, microsecond=0)
 
         new_task = Task(
-            id=new_id,
             description=description,
             due_date=due_date,
             priority=priority,
             status=status
         )
 
-        tasks_db.append(new_task)
+        session.add(new_task)
+        session.commit()
+        session.refresh(new_task)
 
         return new_task
 
