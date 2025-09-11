@@ -54,3 +54,17 @@ This will be a learning project, not a production project. The AI should act as 
 - ✅ Add the created task to the persistent database.
 
 *Mentor: ✅ guide in the process of debugging, refactoring, and solution design. Explain concepts of immutability (`.replace()`), creating Pydantic objects, and the importance of a coherent data model.*
+
+---
+
+### ⏳ 5. Desktop User Interface (Phase 2)
+
+*Technologies: PySide2 (Qt5), Requests.*
+**Goals:**
+- 🔲 Set up a basic Qt5 application window.
+- 🔲 Design the main layout (task list, input fields, buttons).
+- 🔲 Implement logic to fetch and display tasks from the API.
+- 🔲 Implement functionality to create, update, and delete tasks by calling the API.
+- 🔲 Connect the NLP input field to the `/tasks/nlp` endpoint.
+
+*Mentor: guide on Qt basics like signals/slots, model/view architecture, and making HTTP requests.*

@@ -1,55 +1,56 @@
-# AI-Powered Task Manager (MVP)
+# AI-Powered Task Manager
 
-This is a learning project to build a task management API using FastAPI, with guidance from an AI mentor. The project features a complete CRUD API, data persistence with SQLite, and a Natural Language Processing endpoint for task creation.
+A desktop task management application built with Python, featuring a powerful FastAPI backend and a user-friendly Qt5 interface. The application leverages Natural Language Processing for intelligent task creation.
+
+## Architecture
+
+This project follows a modern client-server architecture:
+
+- **Backend**: A REST API built with **FastAPI** that handles all business logic, data persistence (via **SQLModel** and **SQLite**), and Natural Language Processing.
+- **Frontend**: A desktop client built with **PySide2 (Qt5)** that provides the user interface and communicates with the backend via HTTP requests.
 
 ## Features
 
-- **FastAPI Backend**: A modern, fast (high-performance) web framework for building APIs.
-- **SQLite Database**: Persistent data storage using SQLite, managed with SQLModel and SQLAlchemy.
-- **Full CRUD Functionality**: All standard Create, Read, Update, and Delete operations for tasks are implemented.
-- **Natural Language Task Creation**: A special endpoint at `/tasks/nlp` that accepts a sentence in natural language (Spanish or English) and automatically parses the description and due date to create a task.
-- **Interactive API Docs**: Automatic, interactive API documentation provided by FastAPI at `/docs`.
+- **Intuitive Desktop UI**: A clean and simple user interface built with Qt5.
+- **Persistent Task Storage**: Tasks are saved in a local SQLite database.
+- **Full CRUD Functionality**: Create, Read, Update, and Delete tasks through the UI.
+- **Natural Language Task Creation**: A special input field to create tasks from simple sentences (e.g., "review report tomorrow at 5pm").
+- **Decoupled Architecture**: A professional separation of the frontend client and the backend server.
 
 ## How to Run the Project
 
-1.  **Clone the repository** (if applicable).
+This project has two components that need to be run separately: the **Backend API** and the **Desktop UI**.
 
+### 1. Setup
+
+1.  **Clone the repository** (if applicable).
 2.  **Create and activate a virtual environment**:
     ```bash
-    # Create the environment
     python -m venv .venv
-
-    # Activate on Windows (Command Prompt)
     .venv\Scripts\activate
-
-    # Activate on Windows (PowerShell)
-    .\.venv\.Scripts\Activate.ps1
-
-    # Activate on Linux/macOS (Bash)
-    source .venv/bin/activate
     ```
-
 3.  **Install dependencies**:
+    This will install dependencies for both the backend and the UI.
     ```bash
     pip install -r requirements.txt
     ```
 
-4.  **Start the development server**:
-    The application uses `uvicorn` to run. The `--reload` flag enables hot-reloading on code changes.
+### 2. Running the Application
+
+1.  **Start the Backend API**:
+    Open a terminal, activate the virtual environment, and run:
     ```bash
     uvicorn main:app --reload
     ```
-    When you run this command for the first time, it will create a `database.db` file for the SQLite database.
+    Leave this terminal running. The API is now available at `http://127.0.0.1:8000`.
 
-5.  **Access the API**:
-    - The API will be available at `http://127.0.0.1:8000`.
-    - The interactive documentation can be accessed at `http://127.0.0.1:8000/docs`.
+2.  **Launch the Desktop UI**:
+    Open a **second terminal**, activate the same virtual environment, and run:
+    ```bash
+    python ui_main.py 
+    ```
+    *(Note: We will create the `ui_main.py` file in the next steps).*
 
-## API Endpoints
+## API Documentation
 
-- `GET /tasks`: Retrieve all tasks.
-- `POST /tasks`: Create a new task.
-- `PUT /tasks/{task_id}`: Update an existing task.
-- `DELETE /tasks/{task_id}`: Delete a task.
-- `POST /tasks/nlp`: Create a new task from a natural language query.
-- `GET /health`: Health check endpoint.
+While using the desktop app, you can still access the backend's interactive documentation by navigating to `http://127.0.0.1:8000/docs` in your web browser.
