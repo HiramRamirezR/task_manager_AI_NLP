@@ -59,7 +59,7 @@ This will be a learning project, not a production project. The AI should act as 
 
 ### ⏳ 5. Desktop User Interface (Phase 2)
 
-*Technologies: PySide2 (Qt5), Requests.*
+*Technologies: PySide6 (Qt6), Requests.*
 **Goals:**
 - 🔲 Set up a basic Qt5 application window.
 - 🔲 Design the main layout (task list, input fields, buttons).
