@@ -67,13 +67,14 @@ def update_task(task_id: int, task_update: Task, session: Session = Depends(get_
     return db_task
 
 
-@app.delete("/tasks/{task_id}")
-def delete_task(task_id: int):
-    for i, task in enumerate(tasks_db):
-        if task.id == task_id:
-            del tasks_db[i]
-            return {"status": "success", "message": "Task deleted successfully"}
-    raise HTTPException(status_code=404, detail="Task not found")
+@app.delete("/tasks/{task_id}", status_code=204)
+def delete_task(task_id: int, session: Session = Depends(get_session)):
+    db_task = session.get(Task, task_id)
+    if not db_task:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    session.delete(db_task)
+    session.commit()
 
 
 @app.post("/tasks/nlp", response_model=Task)
