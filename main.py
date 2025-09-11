@@ -25,8 +25,6 @@ def on_startup():
     create_db_and_tables()
 
 
-tasks_db = []
-
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
