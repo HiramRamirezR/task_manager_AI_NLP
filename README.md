@@ -1,53 +1,55 @@
-# Gestor de Tareas con AI (MVP)
+# AI-Powered Task Manager (MVP)
 
-Este es un proyecto de aprendizaje para construir una API de gestión de tareas usando FastAPI, con la guía de un mentor de IA.
+This is a learning project to build a task management API using FastAPI, with guidance from an AI mentor. The project features a complete CRUD API, data persistence with SQLite, and a Natural Language Processing endpoint for task creation.
 
-## Estado Actual del Proyecto
+## Features
 
-El proyecto se encuentra en la fase inicial de desarrollo. Las siguientes funcionalidades están implementadas:
+- **FastAPI Backend**: A modern, fast (high-performance) web framework for building APIs.
+- **SQLite Database**: Persistent data storage using SQLite, managed with SQLModel and SQLAlchemy.
+- **Full CRUD Functionality**: All standard Create, Read, Update, and Delete operations for tasks are implemented.
+- **Natural Language Task Creation**: A special endpoint at `/tasks/nlp` that accepts a sentence in natural language (Spanish or English) and automatically parses the description and due date to create a task.
+- **Interactive API Docs**: Automatic, interactive API documentation provided by FastAPI at `/docs`.
 
-- **Configuración del Entorno**: Uso de un entorno virtual de Python (`.venv`).
-- **Dependencias Principales**: `fastapi` y `uvicorn`.
-- **Almacenamiento en Memoria**: Las tareas se guardan temporalmente en una lista en memoria.
-- **Endpoints de la API**:
-    - `GET /docs`: Documentación interactiva de la API.
-    - `GET /health`: Endpoint para verificar el estado del servidor.
-    - `GET /tasks`: Obtiene la lista de todas las tareas.
-    - `POST /tasks`: Crea una nueva tarea.
+## How to Run the Project
 
-## Próximos Pasos
+1.  **Clone the repository** (if applicable).
 
-El siguiente objetivo es implementar los endpoints `PUT` y `DELETE` para permitir la actualización y eliminación de tareas existentes.
-
-## Cómo Ejecutar el Proyecto
-
-1.  **Clonar el repositorio** (si aplica).
-
-2.  **Crear y activar el entorno virtual**:
+2.  **Create and activate a virtual environment**:
     ```bash
-    # Crear el entorno
+    # Create the environment
     python -m venv .venv
 
-    # Activar en Windows (CMD)
+    # Activate on Windows (Command Prompt)
     .venv\Scripts\activate
 
-    # Activar en Windows (PowerShell)
-    .\.venv\Scripts\Activate.ps1
+    # Activate on Windows (PowerShell)
+    .\.venv\.Scripts\Activate.ps1
 
-    # Activar en Linux/macOS (Bash)
+    # Activate on Linux/macOS (Bash)
     source .venv/bin/activate
     ```
 
-3.  **Instalar las dependencias**:
+3.  **Install dependencies**:
     ```bash
     pip install -r requirements.txt
     ```
 
-4.  **Iniciar el servidor de desarrollo**:
+4.  **Start the development server**:
+    The application uses `uvicorn` to run. The `--reload` flag enables hot-reloading on code changes.
     ```bash
     uvicorn main:app --reload
     ```
+    When you run this command for the first time, it will create a `database.db` file for the SQLite database.
 
-5.  **Acceder a la API**:
-    - La API estará disponible en `http://127.0.0.1:8000`.
-    - La documentación interactiva se encuentra en `http://127.0.0.1:8000/docs`.
+5.  **Access the API**:
+    - The API will be available at `http://127.0.0.1:8000`.
+    - The interactive documentation can be accessed at `http://127.0.0.1:8000/docs`.
+
+## API Endpoints
+
+- `GET /tasks`: Retrieve all tasks.
+- `POST /tasks`: Create a new task.
+- `PUT /tasks/{task_id}`: Update an existing task.
+- `DELETE /tasks/{task_id}`: Delete a task.
+- `POST /tasks/nlp`: Create a new task from a natural language query.
+- `GET /health`: Health check endpoint.

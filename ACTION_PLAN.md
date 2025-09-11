@@ -1,57 +1,56 @@
-# 🎯 Plan de Acción – Gestor de Tareas con AI (MVP)
+# 🎯 Action Plan – AI Task Manager (MVP)
 
-Este será un proyecto de aprendizaje, no un proyecto de producción.
-La IA debe actuar como mentor, explicando y enseñando los conceptos, revisando el código que yo escriba y corrigiéndome si es necesario, pero no debe escribir código por mí directamente. Yo escribiré cada línea, y la IA solo me guiará.
-
----
-
-### ✅ 1. Configuración inicial del proyecto
-
-*Tecnologías: Python 3.10+, FastAPI, Uvicorn.*
-**Objetivos:**
-- ✅ Crear un entorno virtual.
-- ✅ Instalar dependencias necesarias.
-- ✅ Configurar el punto de entrada `main.py` con un endpoint de prueba (`/health`).
-
-*Mentor: ✅ debe explicar la estructura de un proyecto FastAPI y por qué usamos uvicorn como servidor ASGI.*
+This will be a learning project, not a production project. The AI should act as a mentor, explaining and teaching concepts, reviewing the code I write, and correcting me if necessary, but should not write code for me directly. I will write every line, and the AI will only guide me.
 
 ---
 
-### ✅ 2. Modelo de datos y CRUD básico
+### ✅ 1. Initial Project Setup
 
-*Tecnologías: FastAPI, Pydantic.*
-**Objetivos:**
-- ✅ Definir un modelo `Task` con campos: `id`, `description`, `due_date`, `priority`, `status`.
-- Implementar endpoints REST:
-    - ✅ `POST /tasks` (crear tarea).
-    - ✅ `GET /tasks` (listar todas las tareas).
-    - ✅ `PUT /tasks/{id}` (actualizar una tarea).
-    - ✅ `DELETE /tasks/{id}` (eliminar tarea).
+*Technologies: Python 3.10+, FastAPI, Uvicorn.*
+**Goals:**
+- ✅ Create a virtual environment.
+- ✅ Install necessary dependencies.
+- ✅ Set up the `main.py` entry point with a test endpoint (`/health`).
 
-*Mentor: ✅ debe enseñar la diferencia entre modelos de entrada (request) y salida (response) en Pydantic, y explicar cómo FastAPI valida automáticamente los datos.*
+*Mentor: ✅ should explain the structure of a FastAPI project and why we use uvicorn as an ASGI server.*
 
 ---
 
-### ⏳ 3. Persistencia de datos
+### ✅ 2. Data Model and Basic CRUD
 
-*Tecnologías: SQLite + SQLAlchemy (opcional, se puede usar una lista en memoria primero).*
-**Objetivos:**
-- ✅ Empezar con almacenamiento en memoria (lista `tasks_db`).
-- Opcionalmente, conectar una base SQLite usando SQLAlchemy.
+*Technologies: FastAPI, Pydantic.*
+**Goals:**
+- ✅ Define a `Task` model with fields: `id`, `description`, `due_date`, `priority`, `status`.
+- ✅ Implement REST endpoints:
+    - ✅ `POST /tasks` (create task).
+    - ✅ `GET /tasks` (list all tasks).
+    - ✅ `PUT /tasks/{id}` (update a task).
+    - ✅ `DELETE /tasks/{id}` (delete task).
 
-*Mentor: explicar qué es una base de datos relacional y por qué usar SQLite como paso intermedio para un MVP.*
+*Mentor: ✅ should teach the difference between input (request) and output (response) models in Pydantic, and explain how FastAPI automatically validates data.*
 
 ---
 
-### ✅ 4. Endpoint de NLP para crear tareas desde lenguaje natural
+### ✅ 3. Data Persistence
 
-*Tecnologías: FastAPI, Pydantic, dateparser, regex.*
-**Objetivos:**
-- ✅ Crear un endpoint `POST /tasks/nlp` que recibe texto.
-- ✅ Implementar una lógica robusta para extraer fecha y hora, solucionando las limitaciones de `dateparser` con una estrategia híbrida.
-- ✅ Implementar la extracción de la descripción de la tarea del texto original.
-- ✅ Construir un objeto `Task` completo con los datos extraídos y valores por defecto.
-- ✅ Actualizar el modelo `Task` para que `due_date` sea de tipo `datetime` y pueda almacenar la hora.
-- ✅ Añadir la tarea creada a la base de datos en memoria.
+*Technologies: SQLite + SQLModel (SQLAlchemy).*
+**Goals:**
+- ✅ Start with in-memory storage (`tasks_db` list).
+- ✅ Connect a SQLite database using SQLModel and SQLAlchemy.
 
-*Mentor: ✅ guiar en el proceso de depuración, refactorización, y diseño de la solución. Explicar conceptos de inmutabilidad (`.replace()`), creación de objetos Pydantic, y la importancia de un modelo de datos coherente.*
+*Mentor: ✅ explain what a relational database is and why to use SQLite as an intermediate step for an MVP. Explain the Session pattern and dependency injection.*
+
+---
+
+### ✅ 4. NLP Endpoint for Creating Tasks from Natural Language
+
+*Technologies: FastAPI, Pydantic, dateparser, regex.*
+**Goals:**
+- ✅ Create a `POST /tasks/nlp` endpoint that receives text.
+- ✅ Implement robust logic to extract date and time.
+- ✅ Implement the extraction of the task description.
+- ✅ Build a complete `Task` object with the extracted data.
+- ✅ Update the `Task` model so that `due_date` is of type `datetime`.
+- ✅ Add the created task to the persistent database.
+
+*Mentor: ✅ guide in the process of debugging, refactoring, and solution design. Explain concepts of immutability (`.replace()`), creating Pydantic objects, and the importance of a coherent data model.*
