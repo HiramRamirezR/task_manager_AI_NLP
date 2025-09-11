@@ -13,20 +13,24 @@ app = FastAPI()
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
 
+
 # Function to obtain a data base session
 def get_session():
     with Session(engine) as session:
         yield session
 
+
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()
+
 
 tasks_db = []
 
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
+
 
 class NlpRequest(BaseModel):
     text: str
@@ -36,19 +40,32 @@ def get_all_tasks(session: Session = Depends(get_session)):
     tasks = session.exec(select(Task)).all()
     return tasks
 
+
 @app.post("/tasks", response_model=Task)
-def create_task(task: Task):
-    tasks_db.append(task)
+def create_task(task: Task, session: Session = Depends(get_session)):
+    session.add(task)
+    session.commit()
+    session.refresh(task)
     return task
 
+
 @app.put("/tasks/{task_id}", response_model=Task)
-def update_task(task_id: int, task_update: Task):
-    for i, task in enumerate(tasks_db):
-        if task.id == task_id:
-            task_update.id = task_id
-            tasks_db[i] = task_update
-            return task_update
-    raise HTTPException(status_code=404, detail="Task not found")
+def update_task(task_id: int, task_update: Task, session: Session = Depends(get_session)):
+    db_task = session.get(Task, task_id)
+    if not db_task:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    update_data = task_update.dict(exclude_unset=True)
+
+    for key, value in update_data.items():
+        setattr(db_task, key, value)
+
+    session.add(db_task)
+    session.commit()
+    session.refresh(db_task)
+
+    return db_task
+
 
 @app.delete("/tasks/{task_id}")
 def delete_task(task_id: int):
@@ -57,6 +74,7 @@ def delete_task(task_id: int):
             del tasks_db[i]
             return {"status": "success", "message": "Task deleted successfully"}
     raise HTTPException(status_code=404, detail="Task not found")
+
 
 @app.post("/tasks/nlp", response_model=Task)
 def create_task_from_nlp(request: NlpRequest):
