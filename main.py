@@ -3,20 +3,25 @@ from datetime import date, datetime
 from pydantic import BaseModel
 import re
 from dateparser.search import search_dates
+from models import Task
+from database import engine
+from sqlmodel import SQLModel
 
 app = FastAPI()
+
+# This function create the table in the DB
+def create_db_and_tables():
+    SQLModel.metadata.create_all(engine)
+
+@app.on_event("startup")
+def on_startup():
+    create_db_and_tables()
+
 tasks_db = []
 
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
-
-class Task(BaseModel):
-    id: int
-    description: str
-    due_date: datetime
-    priority: str
-    status: str
 
 class NlpRequest(BaseModel):
     text: str
